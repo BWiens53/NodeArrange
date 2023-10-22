@@ -56,7 +56,7 @@ class NA_X_AlignNodes(Operator):
 
         selection = []
         for node in nodes:
-            if node.select and node.type != 'FRAME':
+            if node.select and node.type != 'FRAME' and node != nodes.active:
                 selection.append(node)
 
         # If no nodes are selected, raises exception
@@ -67,18 +67,10 @@ class NA_X_AlignNodes(Operator):
             active_loc = copy(nodes.active.location)
 
         #Get/set parameters for alignment 
-        x_locs = [n.location.x + (n.dimensions.x / 2) for n in selection]  # use dimension to get center of node, not corner
-        x_range = max(x_locs) - min(x_locs)
-        mid_x = (max(x_locs) + min(x_locs)) / 2
-
-        selection = sorted(selection, key=lambda n: n.location.x + (n.dimensions.x / 2))
+        mid_x = nodes.active.location.x + (nodes.active.dimensions.x / 2) # use dimension to get center of node, not corner
 
          # Alignment
-        current_pos = 0
         for node in selection:
-            current_margin = margin
-            current_margin = current_margin * 0.5 if node.hide else current_margin  # use a smaller margin for hidden nodes
-        
             node.location.x = mid_x - (node.dimensions.x / 2)
 
         return {'FINISHED'}
@@ -96,7 +88,7 @@ class NA_Y_AlignNodes(Operator):
 
         selection = []
         for node in nodes:
-            if node.select and node.type != 'FRAME':
+            if node.select and node.type != 'FRAME' and node != nodes.active:
                 selection.append(node)
 
         # If no nodes are selected, raises exception
@@ -106,19 +98,11 @@ class NA_Y_AlignNodes(Operator):
         elif nodes.active in selection:
             active_loc = copy(nodes.active.location)
 
-        #Get/set parameters for alignment  
-        y_locs = [n.location.y - (n.dimensions.y / 2) for n in selection] # use dimension to get center of node, not corner
-        y_range = max(y_locs) - min(y_locs)
-        mid_y = (max(y_locs) + min(y_locs)) / 2
-
-        selection = sorted(selection, key=lambda n: n.location.y + (n.dimensions.y / 2))
+        #Get/set parameters for alignment                  
+        mid_y = nodes.active.location.y - (nodes.active.dimensions.y / 2) # use dimension to get center of node, not corner
 
          # Alignment
-        current_pos = 0
         for node in selection:
-            current_margin = margin
-            current_margin = current_margin * 0.5 if node.hide else current_margin  # use a smaller margin for hidden nodes
-        
             node.location.y = mid_y + (node.dimensions.y / 2)
 
         return {'FINISHED'}
